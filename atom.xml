@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://matrixjoy.github.io/"/>
-  <updated>2020-02-06T08:49:40.720Z</updated>
+  <updated>2020-02-07T16:27:44.638Z</updated>
   <id>http://matrixjoy.github.io/</id>
   
   <author>
@@ -21,7 +21,7 @@
     <link href="http://matrixjoy.github.io/2020/02/06/hello-world/"/>
     <id>http://matrixjoy.github.io/2020/02/06/hello-world/</id>
     <published>2020-02-06T08:49:40.720Z</published>
-    <updated>2020-02-06T08:49:40.720Z</updated>
+    <updated>2020-02-07T16:27:44.638Z</updated>
     
     <summary type="html">
     
@@ -36,6 +36,12 @@
     </summary>
     
     
+      <category term="233" scheme="http://matrixJoy.github.io/categories/233/"/>
+    
+    
+      <category term="cpp" scheme="http://matrixJoy.github.io/tags/cpp/"/>
+    
+      <category term="c" scheme="http://matrixJoy.github.io/tags/c/"/>
     
   </entry>
   
