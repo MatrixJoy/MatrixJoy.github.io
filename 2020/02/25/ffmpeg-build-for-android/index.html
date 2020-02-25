@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   
-  <title>Hello World | Matrix&#39;s blog</title>
+  <title>build ffmpeg for android | Matrix&#39;s blog</title>
   
   <meta name="keywords" content="Computer Graphics,Android,java">
   
@@ -269,8 +269,8 @@
         
   
     <h1 class="title">
-      <a href="/2020/02/06/hello-world/">
-        Hello World
+      <a href="/2020/02/25/ffmpeg-build-for-android/">
+        build ffmpeg for android
       </a>
     </h1>
   
@@ -301,7 +301,7 @@
             <div class="new-meta-item date">
   <a class='notlink'>
     <i class="fas fa-calendar-alt" aria-hidden="true"></i>
-    <p>2020-02-06</p>
+    <p>2020-02-25</p>
   </a>
 </div>
 
@@ -311,9 +311,9 @@
             
   
   <div class='new-meta-item category'>
-    <a href='/categories/233/' rel="nofollow">
+    <a href='/categories/android/ffmpeg/' rel="nofollow">
       <i class="fas fa-folder-open" aria-hidden="true"></i>
-      <p>233</p>
+      <p>android&nbsp;/&nbsp;ffmpeg</p>
     </a>
   </div>
 
@@ -359,19 +359,44 @@
 
     <section class="article typo">
       <div class="article-entry" itemprop="articleBody">
-        <p>Welcome to <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/" target="_blank" rel="noopener">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html" target="_blank" rel="noopener">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues" target="_blank" rel="noopener">GitHub</a>.</p>
-<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo new <span class="string">"My New Post"</span></span><br></pre></td></tr></table></figure>
+        <h1 id="Build-Ffmpeg-for-Android-step-by-step"><a href="#Build-Ffmpeg-for-Android-step-by-step" class="headerlink" title="Build Ffmpeg for Android step by step"></a>Build Ffmpeg for Android step by step</h1><p>作为一名从事音视频开发的android应用开发者怎么能不懂如何给android编译ffmpge呢？</p>
+<p>于是我打开了万能的搜索引擎输入<code>如何给android编译ffmpeg</code>果然给了我很多结果，然后随便打开一看就是你要这样然后那样就可以愉快的编译了，这里我就好奇了为啥要这么写脚本呀？如果换了一个ffmpge版本或者ndk版本进行了升级我是不是就搞不定了。</p>
+<p>本着能够弄懂的原则咱们不拘泥于能编译出来一个动态库更多的还是希望能知其然也知其所以然，话不多说咱们开始。</p>
+<h2 id="准备工作"><a href="#准备工作" class="headerlink" title="准备工作"></a>准备工作</h2><p>需要先做好如下的准备工作：</p>
+<ul>
+<li>一台电脑最好是*unix系统。</li>
+<li>下载<a href="https://ffmpeg.org/releases/ffmpeg-4.2.2.tar.bz2" target="_blank" rel="noopener">ffmpeg源码</a>注意是源码 本文基于4.2.2版本</li>
+<li>下载ndk版本 本文基于19c</li>
+</ul>
+<h2 id="开始编译"><a href="#开始编译" class="headerlink" title="开始编译"></a>开始编译</h2><p>首先打开ffmpeg解压缩后的目录其中有一个<code>configure</code>的可执行文件他就是负责整个ffmpeg编译的配置文件，提供了很多动态可配置的能力，我们可以通过执行</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">.&#x2F;configure --help</span><br></pre></td></tr></table></figure>
+<p>查询支持配置的具体细节。</p>
+<p>其实所有关于给Android编译ffmpeg文章写的编写脚本就是给<code>configure</code>进行参数化配置，所以这里有必要了解几个参数名：</p>
+<ul>
+<li><p><code>--prefix</code> 编译文件输出目录，也就是我们编译好的so库输出的目录位置</p>
+</li>
+<li><p><code>--arch</code> 这是要编译库的cpu架构 对于Android无非这几种<code>arm</code>、<code>x86</code> 现在我们主要考虑的就是<code>arm</code>架构的兼容</p>
+</li>
+<li><p><code>--target-os</code> 编译的目标系统版本 咱们这里当然是android</p>
+</li>
+<li><p><code>--sysroot</code> 这个是交叉编译相关的根目录 咱们这里对应的是ndk中的 <code>sysroot</code> 目录 ndk r19 对应的是 <code>toolchains/llvm/prebuilt/darwin-x86_64/sysroot</code></p>
+</li>
+<li><p><code>--cross-prefix</code> 交叉编译相关的依赖目录下的一系列文件，以arm架构为例，其对应的是ndk中 <code>toolchains/arm-linux-androideabi-4.9/prebuilt/darwin-x86_64/bin/
+arm-linux-androideabi-</code> 在ndk r19有所不同google对其进行了收敛对应的目录是 <code>toolchains/llvm/prebuilt/darwin-x86_64/bin/arm-linux-androideabi-</code></p>
+</li>
+<li><p><code>--cc</code> 交叉编译编译器路径 <code>clang</code> 还是 <code>gcc</code> 这里得注意ndk r17 之后 <code>gcc</code> 编译被从 ndk 中移除了所以只支持 <code>clang</code>，还是以arm架构为例 <code>toolchains/arm-linux-androideabi-4.9/prebuilt/darwin-x86_64/bin/arm-linux-androideabi-gcc</code> 在ndk r19中google对其进行了分版本处理所以其对应的路径是 <code>toolchains/llvm/prebuilt/darwin-x86_64/bin/armv7a-linux-androideabi${版本号}-clang</code></p>
+</li>
+</ul>
+<p>所以说只要弄懂了上面几个参数的含义，编写编译脚本也就好写了。</p>
+<p>可能有的教程还会说要改<code>configure</code> 里so文件输出的后缀名，这个就得看具体的ffmpeg版本的配置了，本文基于4.2.2所以毋需手动修改，具体是否需要修改可以在文件中搜索<code># build settings</code>字段，看齐输出名字的配置格式即可，而不是傻瓜式的别个咋个写的就咋个改。</p>
+<p>了解了上述知识后，就可以愉快的编写脚本了，就算后面换了ffmpeg版本或者ndk版本咱也不怕。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash">!/bin/sh</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 要编译的架构</span></span><br><span class="line">CPU=arm</span><br><span class="line"><span class="meta">#</span><span class="bash"> so 输出目录</span></span><br><span class="line">PREFIX=$(pwd)/android/$CPU</span><br><span class="line"><span class="meta">#</span><span class="bash"> ndk下载解压目录</span></span><br><span class="line">NDK_HOEM=/Users/matrix/Downloads/android-ndk-r19c</span><br><span class="line"><span class="meta">#</span><span class="bash"> 交叉编译依赖的工具链</span></span><br><span class="line">TOOLCHAIN=$NDK_HOEM/toolchains/llvm/prebuilt/darwin-x86_64</span><br><span class="line"><span class="meta">#</span><span class="bash"> Android OS 依赖的相关目录和头文件的根目录</span></span><br><span class="line">SYSROOT=$TOOLCHAIN/sysroot/</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">./configure  \</span><br><span class="line">    --prefix=$PREFIX \</span><br><span class="line">    --arch=$CPU \</span><br><span class="line">    --target-os=android \</span><br><span class="line">    --sysroot=$&#123;SYSROOT&#125; \</span><br><span class="line">    --enable-cross-compile \</span><br><span class="line">    --cross-prefix=$TOOLCHAIN/bin/arm-linux-androideabi- \</span><br><span class="line">    --cc=$TOOLCHAIN/bin/armv7a-linux-androideabi19-clang \</span><br><span class="line">    --extra-cflags="-O3 -fPIC" \</span><br><span class="line">    --pkg-config=$(which pkg-config) \</span><br><span class="line">    --enable-thumb \</span><br><span class="line">    --disable-static \</span><br><span class="line">    --enable-shared \</span><br><span class="line">    --disable-doc \</span><br><span class="line">    --disable-network \</span><br><span class="line">    --disable-programs \</span><br><span class="line">    --disable-debug \</span><br><span class="line">    --disable-network \</span><br><span class="line">    --disable-avdevice \</span><br><span class="line">    --disable-avfilter \</span><br><span class="line">    --disable-bsfs   \</span><br><span class="line"></span><br><span class="line">make clean</span><br><span class="line">make -j$(sysctl -n hw.physicalcpu)</span><br><span class="line">make install</span><br></pre></td></tr></table></figure>
 
-<p>More info: <a href="https://hexo.io/docs/writing.html" target="_blank" rel="noopener">Writing</a></p>
-<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
-
-<p>More info: <a href="https://hexo.io/docs/server.html" target="_blank" rel="noopener">Server</a></p>
-<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure>
-
-<p>More info: <a href="https://hexo.io/docs/generating.html" target="_blank" rel="noopener">Generating</a></p>
-<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
-
-<p>More info: <a href="https://hexo.io/docs/one-command-deployment.html" target="_blank" rel="noopener">Deployment</a></p>
+<p>对于编译给android用的so库而言，必须<code>--enable-shared</code> 并且<code>--disable-static</code>，关于<code>--extra-cflags=&quot;-O3 -fPIC&quot;</code> 其中-O3是一个编译优化级别，-fPIC必须存在对于编译so库给android而言。<code>$(sysctl -n hw.physicalcpu)</code>是为了支持多核并行编译，这样会比较快。</p>
+<p>如上如述基本上就能编译出一个供android使用的ffmpeg的so库了。<br>如果在编译过程中遇到什么库找不到呀，什么的错误可以参考以下参考资料第二条。</p>
+<h2 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h2><p>[1] <a href="https://proandroiddev.com/a-story-about-ffmpeg-in-android-part-i-compilation-898e4a249422" target="_blank" rel="noopener">A Story about FFmpeg on Android.Part I: Compilation</a></p>
+<p>[2] <a href="https://daking.tech/ffmpeg/macOS%E4%B8%8A%E7%BC%96%E8%AF%91FFmpeg.html#macos%E4%B8%8A%E7%BC%96%E8%AF%91ffmpeg-2" target="_blank" rel="noopener">macOS上编译FFmpeg</a></p>
+<p>[3] <a href="https://trac.ffmpeg.org/wiki/CompilationGuide/Generic" target="_blank" rel="noopener">CompilationGuide/Generic</a></p>
 
       </div>
       
@@ -384,10 +409,10 @@
     <div class='new-meta-box'>
       
         
-          <div class="new-meta-item date" itemprop="dateUpdated" datetime="2020-02-08T00:27:44+08:00">
+          <div class="new-meta-item date" itemprop="dateUpdated" datetime="2020-02-26T00:19:48+08:00">
   <a class='notlink'>
     <i class="fas fa-clock" aria-hidden="true"></i>
-    <p>更新于 2020年2月8日</p>
+    <p>更新于 2020年2月26日</p>
   </a>
 </div>
 
@@ -396,7 +421,7 @@
         
           
   
-  <div class="new-meta-item meta-tags"><a class="tag" href="/tags/cpp/" rel="nofollow"><i class="fas fa-tag" aria-hidden="true"></i><p>cpp</p></a></div> <div class="new-meta-item meta-tags"><a class="tag" href="/tags/c/" rel="nofollow"><i class="fas fa-tag" aria-hidden="true"></i><p>c</p></a></div>
+  <div class="new-meta-item meta-tags"><a class="tag" href="/tags/ffmpeg/" rel="nofollow"><i class="fas fa-tag" aria-hidden="true"></i><p>ffmpeg</p></a></div> <div class="new-meta-item meta-tags"><a class="tag" href="/tags/android/" rel="nofollow"><i class="fas fa-tag" aria-hidden="true"></i><p>android</p></a></div>
 
 
         
@@ -409,7 +434,7 @@
       
         <a class="-mob-share-qq" title="QQ好友" rel="external nofollow noopener noreferrer"
           
-          href="http://connect.qq.com/widget/shareqq/index.html?url=http://matrixjoy.github.io/2020/02/06/hello-world/&title=Hello World | Matrix's blog&summary="
+          href="http://connect.qq.com/widget/shareqq/index.html?url=http://matrixjoy.github.io/2020/02/25/ffmpeg-build-for-android/&title=build ffmpeg for android | Matrix's blog&summary="
           
           >
           
@@ -421,7 +446,7 @@
       
         <a class="-mob-share-qzone" title="QQ空间" rel="external nofollow noopener noreferrer"
           
-          href="https://sns.qzone.qq.com/cgi-bin/qzshare/cgi_qzshare_onekey?url=http://matrixjoy.github.io/2020/02/06/hello-world/&title=Hello World | Matrix's blog&summary="
+          href="https://sns.qzone.qq.com/cgi-bin/qzshare/cgi_qzshare_onekey?url=http://matrixjoy.github.io/2020/02/25/ffmpeg-build-for-android/&title=build ffmpeg for android | Matrix's blog&summary="
           
           >
           
@@ -433,7 +458,7 @@
       
         <a class="-mob-share-weibo" title="微博" rel="external nofollow noopener noreferrer"
           
-          href="http://service.weibo.com/share/share.php?url=http://matrixjoy.github.io/2020/02/06/hello-world/&title=Hello World | Matrix's blog&summary="
+          href="http://service.weibo.com/share/share.php?url=http://matrixjoy.github.io/2020/02/25/ffmpeg-build-for-android/&title=build ffmpeg for android | Matrix's blog&summary="
           
           >
           
@@ -489,7 +514,7 @@
 
   <script>
     window.subData = {
-      title: 'Hello World',
+      title: 'build ffmpeg for android',
       tools: true
     }
   </script>
@@ -606,7 +631,7 @@
 </header>
 
     <div class='content pure'>
-      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Quick-Start"><span class="toc-text">Quick Start</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Create-a-new-post"><span class="toc-text">Create a new post</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Run-server"><span class="toc-text">Run server</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Generate-static-files"><span class="toc-text">Generate static files</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Deploy-to-remote-sites"><span class="toc-text">Deploy to remote sites</span></a></li></ol></li></ol>
+      <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Build-Ffmpeg-for-Android-step-by-step"><span class="toc-text">Build Ffmpeg for Android step by step</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#准备工作"><span class="toc-text">准备工作</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#开始编译"><span class="toc-text">开始编译</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#参考资料"><span class="toc-text">参考资料</span></a></li></ol></li></ol>
     </div>
   </section>
 
@@ -722,7 +747,9 @@
     <div class='content pure'>
       <ul class="entry">
         
-          <li><a class="flat-box" title="/categories/233/" href="/categories/233/"><div class='name'>233</div><div class='badge'>(1)</div></a></li>
+          <li><a class="flat-box" title="/categories/android/" href="/categories/android/"><div class='name'>android</div><div class='badge'>(1)</div></a></li>
+        
+          <li><a class="flat-box child" title="/categories/android/ffmpeg/" href="/categories/android/ffmpeg/"><div class='name'>ffmpeg</div><div class='badge'>(1)</div></a></li>
         
       </ul>
     </div>
@@ -770,7 +797,7 @@
 </header>
 
     <div class='content pure'>
-      <a href="/tags/c/" style="font-size: 14px; color: #999">c</a> <a href="/tags/cpp/" style="font-size: 14px; color: #999">cpp</a>
+      <a href="/tags/android/" style="font-size: 14px; color: #999">android</a> <a href="/tags/ffmpeg/" style="font-size: 14px; color: #999">ffmpeg</a>
     </div>
   </section>
 

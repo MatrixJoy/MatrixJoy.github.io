@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://matrixjoy.github.io/"/>
-  <updated>2020-02-07T16:27:44.638Z</updated>
+  <updated>2020-02-25T16:19:48.293Z</updated>
   <id>http://matrixjoy.github.io/</id>
   
   <author>
@@ -17,11 +17,11 @@
   <generator uri="https://hexo.io/">Hexo</generator>
   
   <entry>
-    <title>Hello World</title>
-    <link href="http://matrixjoy.github.io/2020/02/06/hello-world/"/>
-    <id>http://matrixjoy.github.io/2020/02/06/hello-world/</id>
-    <published>2020-02-06T08:49:40.720Z</published>
-    <updated>2020-02-07T16:27:44.638Z</updated>
+    <title>build ffmpeg for android</title>
+    <link href="http://matrixjoy.github.io/2020/02/25/ffmpeg-build-for-android/"/>
+    <id>http://matrixjoy.github.io/2020/02/25/ffmpeg-build-for-android/</id>
+    <published>2020-02-25T14:02:16.000Z</published>
+    <updated>2020-02-25T16:19:48.293Z</updated>
     
     <summary type="html">
     
@@ -29,19 +29,21 @@
       
         
         
-          &lt;p&gt;Welcome to &lt;a href=&quot;https://hexo.io/&quot; target=&quot;_blank&quot; rel=&quot;noopener&quot;&gt;Hexo&lt;/a&gt;! This is your very first post. Check &lt;a
+          &lt;h1 id=&quot;Build-Ffmpeg-for-Android-step-by-step&quot;&gt;&lt;a href=&quot;#Build-Ffmpeg-for-Android-step-by-step&quot; class=&quot;headerlink&quot; title=&quot;Build Ffmpeg for
         
       
     
     </summary>
     
     
-      <category term="233" scheme="http://matrixJoy.github.io/categories/233/"/>
+      <category term="android" scheme="http://matrixJoy.github.io/categories/android/"/>
+    
+      <category term="ffmpeg" scheme="http://matrixJoy.github.io/categories/android/ffmpeg/"/>
     
     
-      <category term="cpp" scheme="http://matrixJoy.github.io/tags/cpp/"/>
+      <category term="ffmpeg" scheme="http://matrixJoy.github.io/tags/ffmpeg/"/>
     
-      <category term="c" scheme="http://matrixJoy.github.io/tags/c/"/>
+      <category term="android" scheme="http://matrixJoy.github.io/tags/android/"/>
     
   </entry>
   
