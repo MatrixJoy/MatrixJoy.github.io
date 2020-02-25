@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://matrixjoy.github.io/"/>
-  <updated>2020-02-25T16:19:48.293Z</updated>
+  <updated>2020-02-25T16:23:44.864Z</updated>
   <id>http://matrixjoy.github.io/</id>
   
   <author>
@@ -17,11 +17,11 @@
   <generator uri="https://hexo.io/">Hexo</generator>
   
   <entry>
-    <title>build ffmpeg for android</title>
+    <title>Build Ffmpeg for Android step by step</title>
     <link href="http://matrixjoy.github.io/2020/02/25/ffmpeg-build-for-android/"/>
     <id>http://matrixjoy.github.io/2020/02/25/ffmpeg-build-for-android/</id>
     <published>2020-02-25T14:02:16.000Z</published>
-    <updated>2020-02-25T16:19:48.293Z</updated>
+    <updated>2020-02-25T16:23:44.864Z</updated>
     
     <summary type="html">
     
@@ -29,16 +29,14 @@
       
         
         
-          &lt;h1 id=&quot;Build-Ffmpeg-for-Android-step-by-step&quot;&gt;&lt;a href=&quot;#Build-Ffmpeg-for-Android-step-by-step&quot; class=&quot;headerlink&quot; title=&quot;Build Ffmpeg for
+          &lt;h2 id=&quot;前言&quot;&gt;&lt;a href=&quot;#前言&quot; class=&quot;headerlink&quot;
         
       
     
     </summary>
     
     
-      <category term="android" scheme="http://matrixJoy.github.io/categories/android/"/>
-    
-      <category term="ffmpeg" scheme="http://matrixJoy.github.io/categories/android/ffmpeg/"/>
+      <category term="ffmpeg" scheme="http://matrixJoy.github.io/categories/ffmpeg/"/>
     
     
       <category term="ffmpeg" scheme="http://matrixJoy.github.io/tags/ffmpeg/"/>
